@@ -1,0 +1,32 @@
+identity:
+  name: aimode
+  author: cloro-dev
+  label:
+    en_US: Google AI Mode Answer
+description:
+  human:
+    en_US: Send a prompt to Google AI Mode from a country and get the answer with its sources. Costs 6 credits.
+  llm: Sends a prompt to Google AI Mode from a country and returns the answer that Google AI Mode gives, with the sources it cites. Use it to see what Google AI Mode tells people about a topic, a brand or a product.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+    human_description:
+      en_US: The prompt to send to Google AI Mode.
+    llm_description: The question or prompt to send to Google AI Mode.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: US
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code to send the prompt from, for example US, GB or DE. The default is US.
+    llm_description: Optional two-letter ISO 3166-1 country code to send the prompt from, for example US, GB or DE. The default is US.
+    form: llm
+extra:
+  python:
+    source: tools/aimode.py

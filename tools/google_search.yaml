@@ -1,0 +1,41 @@
+identity:
+  name: google_search
+  author: cloro-dev
+  label:
+    en_US: Google Search
+description:
+  human:
+    en_US: Search Google from a country and get the organic results. As an option, also get the AI Overview text and its sources. Costs 5 credits, or 7 credits with the AI Overview.
+  llm: Searches Google from a country and returns the organic results (title, link, snippet). If the AI Overview option is on, it also returns the AI Overview text and the sources that the AI Overview cites. Use it for current web results or to see what Google's AI Overview says about a topic.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+    human_description:
+      en_US: The Google search query.
+    llm_description: The search query to send to Google.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: US
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code to search from, for example US, GB or DE. The default is US.
+    llm_description: Optional two-letter ISO 3166-1 country code to search from, for example US, GB or DE. The default is US.
+    form: llm
+  - name: include_ai_overview
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include AI Overview
+    human_description:
+      en_US: Also get the Google AI Overview and its sources (2 more credits).
+    form: form
+extra:
+  python:
+    source: tools/google_search.py

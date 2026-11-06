@@ -1,0 +1,16 @@
+# Files that are not in the .difypkg package
+.git/
+.gitignore
+.github/
+.venv/
+venv/
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+tests/
+*.difypkg
+.DS_Store
+.idea/
+.vscode/
