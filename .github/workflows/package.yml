@@ -1,0 +1,45 @@
+# Builds the .difypkg with Dify's plugin CLI. Every run uploads it as an
+# artifact. When a merge to main changes `version` in manifest.yaml, it also
+# creates the vX.Y.Z GitHub Release with the package attached. Submit that
+# file to langgenius/dify-plugins to publish it on the Dify Marketplace.
+name: Package
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: |
+          version=$(sed -n 's/^version: *//p' manifest.yaml | head -1)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$version" > /dev/null; then
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install the Dify plugin CLI
+        run: |
+          curl -fsSL -o /usr/local/bin/dify https://github.com/langgenius/dify-plugin-daemon/releases/latest/download/dify-plugin-linux-amd64
+          chmod +x /usr/local/bin/dify
+          dify version
+      - name: Package
+        run: |
+          cp -r "$GITHUB_WORKSPACE" /tmp/cloro
+          dify plugin package /tmp/cloro -o "cloro-${{ steps.v.outputs.version }}.difypkg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cloro-${{ steps.v.outputs.version }}.difypkg
+          path: cloro-${{ steps.v.outputs.version }}.difypkg
+      - name: Create the GitHub release
+        if: github.event_name == 'push' && steps.v.outputs.new == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "v${{ steps.v.outputs.version }}" "cloro-${{ steps.v.outputs.version }}.difypkg" --target "$GITHUB_SHA" --title "v${{ steps.v.outputs.version }}" --generate-notes
