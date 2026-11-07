@@ -5,7 +5,7 @@ name: cloro
 label:
   en_US: cloro
 description:
-  en_US: Get the answers that ChatGPT, Google AI Mode and Gemini give to a prompt, with their sources, and Google Search results with the AI Overview.
+  en_US: Get the answers that ChatGPT, Google AI Mode, Gemini and Bing AI Mode give to a prompt, with their sources, and Google Search results with the AI Overview.
 icon: icon.svg
 created_at: "2026-11-06T00:00:00Z"
 privacy: PRIVACY.md

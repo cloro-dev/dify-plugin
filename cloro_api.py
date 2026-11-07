@@ -1,6 +1,6 @@
 """Calls to the cloro API and conversion of its responses to tool output.
 
-The provider and the four tools share this module. A tool file must hold
+The provider and the five tools share this module. A tool file must hold
 only one Tool subclass, so the shared code is here and not in tools/.
 """
 
@@ -138,7 +138,7 @@ def answer_sources(result: dict) -> list[dict]:
 
 
 def answer_output(result: dict) -> dict:
-    """Output of the ChatGPT, AI Mode and Gemini tools."""
+    """Output of the ChatGPT, Google AI Mode, Gemini and Bing AI Mode tools."""
     return {
         "text": result.get("text") or "",
         "markdown": result.get("markdown") or "",
@@ -171,7 +171,7 @@ def google_output(result: dict) -> dict:
 
 
 def ask(api_key: Any, engine: str, params: dict) -> dict:
-    """Send a prompt to chatgpt, aimode or gemini. Return the tool's JSON output."""
+    """Send a prompt to chatgpt, aimode, gemini or bing/aimode. Return the tool's JSON output."""
     prompt = required_text(params, "prompt", "Prompt")
     country = country_code(params)
     body = {"prompt": prompt, "country": country, "include": {"markdown": True}}

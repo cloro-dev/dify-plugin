@@ -4,7 +4,7 @@ identity:
   label:
     en_US: cloro
   description:
-    en_US: Answers from ChatGPT, Google AI Mode and Gemini with their sources, and Google Search results with the AI Overview.
+    en_US: Answers from ChatGPT, Google AI Mode, Gemini and Bing AI Mode with their sources, and Google Search results with the AI Overview.
   icon: icon.svg
   tags:
     - search
@@ -24,6 +24,7 @@ tools:
   - tools/chatgpt.yaml
   - tools/aimode.yaml
   - tools/gemini.yaml
+  - tools/bing_aimode.yaml
 extra:
   python:
     source: provider/cloro.py
