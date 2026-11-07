@@ -1,10 +1,11 @@
 # cloro for Dify
 
-This plugin adds four tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
+This plugin adds five tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
 
 - **ChatGPT Answer**: the answer that ChatGPT gives to a prompt, with the sources that it cites.
 - **Google AI Mode Answer**: the answer that Google AI Mode gives to a prompt, with its sources.
 - **Gemini Answer**: the answer that Gemini gives to a prompt, with its sources.
+- **Bing AI Mode Answer**: the answer that Bing AI Mode gives to a prompt, with its sources.
 - **Google Search**: the Google organic results for a query. As an option, the tool also gets the Google AI Overview text and its sources.
 
 Each tool sends the request from the country that you select. Use the tools to see what AI assistants and Google tell people about a topic, a brand or a product, and which pages they cite.
@@ -26,8 +27,10 @@ Contact: info@cloro.dev
 | ChatGPT Answer | Prompt, Country | 7 |
 | Google AI Mode Answer | Prompt, Country | 6 |
 | Gemini Answer | Prompt, Country | 6 |
+| Bing AI Mode Answer | Prompt, Country | 6 |
 | Google Search | Query, Country, Include AI Overview | 5, or 7 with the AI Overview |
 
+- **Prompt** of the Bing AI Mode tool can have a maximum of 3,500 characters after URL encoding, and fewer for non-Latin scripts. cloro rejects a longer prompt with error 400.
 - **Country** is a two-letter country code, for example `US`, `GB` or `DE`. The default is `US`.
 - **Include AI Overview** is a setting of the Google Search tool. Google does not show an AI Overview for all queries. When there is no AI Overview, the AI Overview text is empty.
 

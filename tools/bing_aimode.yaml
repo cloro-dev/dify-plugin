@@ -1,0 +1,32 @@
+identity:
+  name: bing_aimode
+  author: cloro-dev
+  label:
+    en_US: Bing AI Mode Answer
+description:
+  human:
+    en_US: Send a prompt to Bing AI Mode from a country and get the answer with its sources. Costs 6 credits.
+  llm: Sends a prompt to Bing AI Mode from a country and returns the answer that Bing AI Mode gives, with the sources it cites. Use it to see what Bing AI Mode tells people about a topic, a brand or a product.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+    human_description:
+      en_US: The prompt to send to Bing AI Mode. The maximum is 3,500 characters after URL encoding, and fewer for non-Latin scripts.
+    llm_description: The question or prompt to send to Bing AI Mode. Keep it short. The maximum is 3,500 characters after URL encoding.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: US
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code to send the prompt from, for example US, GB or DE. The default is US.
+    llm_description: Optional two-letter ISO 3166-1 country code to send the prompt from, for example US, GB or DE. The default is US.
+    form: llm
+extra:
+  python:
+    source: tools/bing_aimode.py

@@ -10,6 +10,7 @@ from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 from cloro_api import CloroError, answer_sources
 from provider.cloro import CloroProvider
 from tools.aimode import CloroAIModeTool
+from tools.bing_aimode import CloroBingAIModeTool
 from tools.chatgpt import CloroChatGPTTool
 from tools.gemini import CloroGeminiTool
 from tools.google_search import CloroGoogleSearchTool
@@ -65,10 +66,15 @@ def test_network_error_has_a_clear_message(http):
 
 @pytest.mark.parametrize(
     ("tool_cls", "engine"),
-    [(CloroChatGPTTool, "chatgpt"), (CloroAIModeTool, "aimode"), (CloroGeminiTool, "gemini")],
+    [
+        (CloroChatGPTTool, "chatgpt"),
+        (CloroAIModeTool, "aimode"),
+        (CloroGeminiTool, "gemini"),
+        (CloroBingAIModeTool, "bing/aimode"),
+    ],
 )
 def test_answer_tools_return_text_and_sources(http, tool_cls, engine):
-    fixture = load_fixture(f"{engine}.json")
+    fixture = load_fixture(f"{engine.replace('/', '_')}.json")
     http.reply(200, fixture)
     text, data = run(tool_cls, {"prompt": " best rank tracker ", "country": "gb"})
 
@@ -206,6 +212,7 @@ def test_plugin_registers_provider_and_tools():
         "chatgpt": "CloroChatGPTTool",
         "aimode": "CloroAIModeTool",
         "gemini": "CloroGeminiTool",
+        "bing_aimode": "CloroBingAIModeTool",
     }
     for name, class_name in expected.items():
         assert registration.get_tool_cls("cloro", name).__name__ == class_name
@@ -232,7 +239,7 @@ def test_manifest_and_tool_files_agree():
 
 
 def test_no_promoted_engines_outside_scope():
-    # Only ChatGPT, Google AI Mode, Gemini and Google Search are in this plugin.
+    # Only ChatGPT, Google AI Mode, Gemini, Bing AI Mode and Google Search are in this plugin.
     names = ("perplexity", "copilot", "grok")
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".venv" in path.parts or ".git" in path.parts or path.suffix == ".pyc":
