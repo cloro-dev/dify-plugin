@@ -1,6 +1,6 @@
 """Calls to the cloro API and conversion of its responses to tool output.
 
-The provider and the five tools share this module. A tool file must hold
+The provider and the six tools share this module. A tool file must hold
 only one Tool subclass, so the shared code is here and not in tools/.
 """
 
@@ -9,7 +9,7 @@ from typing import Any
 import requests
 
 API_BASE = "https://api.cloro.dev"
-USER_AGENT = "cloro-dify-plugin/0.0.1"
+USER_AGENT = "cloro-dify-plugin/0.0.2"
 
 # Seconds to wait for cloro. A sync AI answer can take some minutes, so the
 # answer timeout is near the plugin limit (MAX_REQUEST_TIMEOUT in main.py).
@@ -146,8 +146,8 @@ def answer_output(result: dict) -> dict:
     }
 
 
-def google_output(result: dict) -> dict:
-    """Output of the Google Search tool."""
+def search_output(result: dict) -> dict:
+    """Output of the Google Search and Bing Search tools."""
     organic = []
     for item in result.get("organicResults") or []:
         if not isinstance(item, dict) or not _usable_url(item.get("link")):
@@ -179,15 +179,15 @@ def ask(api_key: Any, engine: str, params: dict) -> dict:
     return {"prompt": prompt, "country": country, **answer_output(result)}
 
 
-def search_google(api_key: Any, params: dict) -> dict:
-    """Run a Google search. Return the tool's JSON output."""
+def search(api_key: Any, engine: str, params: dict) -> dict:
+    """Run a google or bing search. Return the tool's JSON output."""
     query = required_text(params, "query", "Query")
     country = country_code(params)
     with_overview = params.get("include_ai_overview") is True
     body: dict[str, Any] = {"query": query, "country": country}
     if with_overview:
         body["include"] = {"aioverview": True}
-    output = google_output(monitor(api_key, "google", body, SEARCH_TIMEOUT))
+    output = search_output(monitor(api_key, engine, body, SEARCH_TIMEOUT))
     if with_overview and "ai_overview" not in output:
         output["ai_overview"] = {"text": "", "sources": []}
     return {"query": query, "country": country, **output}
@@ -205,12 +205,12 @@ def answer_text(output: dict) -> str:
     return "\n".join(lines)
 
 
-def google_text(output: dict) -> str:
+def search_text(output: dict, label: str) -> str:
     """Plain text for an agent: the AI Overview (if any), then the results."""
     lines: list[str] = []
     overview = output.get("ai_overview")
     if overview is not None:
-        lines += ["AI Overview:", overview["text"] or "(Google showed no AI Overview.)"]
+        lines += ["AI Overview:", overview["text"] or f"({label} showed no AI Overview.)"]
         if overview["sources"]:
             lines += ["", "AI Overview sources:"] + _source_lines(overview["sources"])
         lines.append("")

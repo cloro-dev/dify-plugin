@@ -1,0 +1,41 @@
+identity:
+  name: bing_search
+  author: cloro-dev
+  label:
+    en_US: Bing Search
+description:
+  human:
+    en_US: Search Bing from a country and get the organic results. As an option, also get the AI Overview text and its sources. Costs 5 credits, or 7 credits with the AI Overview.
+  llm: Searches Bing from a country and returns the organic results (title, link, snippet). If the AI Overview option is on, it also returns the text of Bing's AI summary at the top of the results page and the sources that it cites. Use it for current Bing web results or to see what Bing's AI summary says about a topic.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+    human_description:
+      en_US: The Bing search query. The maximum is 3,500 characters after URL encoding, and fewer for non-Latin scripts.
+    llm_description: The search query to send to Bing. The maximum is 3,500 characters after URL encoding.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: US
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code to search from, for example US, GB or DE. The country sets the Bing market. CN, KR and RU are not available. The default is US.
+    llm_description: Optional two-letter ISO 3166-1 country code to search from, for example US, GB or DE. CN, KR and RU are not available. The default is US.
+    form: llm
+  - name: include_ai_overview
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include AI Overview
+    human_description:
+      en_US: Also get the Bing AI Overview and its sources (2 more credits).
+    form: form
+extra:
+  python:
+    source: tools/bing_search.py
