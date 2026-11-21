@@ -7,10 +7,12 @@ import yaml
 from conftest import ROOT, load_fixture
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
+import cloro_api
 from cloro_api import CloroError, answer_sources
 from provider.cloro import CloroProvider
 from tools.aimode import CloroAIModeTool
 from tools.bing_aimode import CloroBingAIModeTool
+from tools.bing_search import CloroBingSearchTool
 from tools.chatgpt import CloroChatGPTTool
 from tools.gemini import CloroGeminiTool
 from tools.google_search import CloroGoogleSearchTool
@@ -198,6 +200,56 @@ def test_google_search_needs_a_query(http):
     assert http.calls == []
 
 
+# Bing Search
+
+
+def test_bing_search_with_ai_overview(http):
+    fixture = load_fixture("bing.json")
+    http.reply(200, fixture)
+    text, data = run(
+        CloroBingSearchTool, {"query": " best rank tracker ", "country": "gb", "include_ai_overview": True}
+    )
+
+    call = http.calls[0]
+    assert call["method"] == "POST"
+    assert call["url"] == "https://api.cloro.dev/v1/monitor/bing"
+    assert call["json"] == {"query": "best rank tracker", "country": "GB", "include": {"aioverview": True}}
+    assert call["timeout"] == 120
+
+    # The fixture has 2 normal results and 1 with an empty link.
+    assert data["query"] == "best rank tracker"
+    assert data["country"] == "GB"
+    assert [r["position"] for r in data["organic_results"]] == [1, 2]
+    overview = fixture["result"]["aioverview"]
+    assert data["ai_overview"]["text"] == overview["text"]
+    assert [s["url"] for s in data["ai_overview"]["sources"]] == [s["url"] for s in overview["sources"]]
+    assert text.startswith("AI Overview:")
+    assert "AI Overview sources:" in text
+    assert fixture["result"]["organicResults"][0]["link"] in text
+
+
+def test_bing_search_without_ai_overview(http):
+    http.reply(200, load_fixture("bing-noaio.json"))
+    text, data = run(CloroBingSearchTool, {"query": "best rank tracker"})
+    assert http.calls[0]["json"] == {"query": "best rank tracker", "country": "US"}
+    assert "ai_overview" not in data
+    assert len(data["organic_results"]) == 2
+    assert text.startswith("Search results:")
+
+
+def test_bing_search_when_bing_shows_no_ai_overview(http):
+    http.reply(200, load_fixture("bing-noaio.json"))
+    text, data = run(CloroBingSearchTool, {"query": "q", "include_ai_overview": True})
+    assert data["ai_overview"] == {"text": "", "sources": []}
+    assert "(Bing showed no AI Overview.)" in text
+
+
+def test_bing_search_needs_a_query(http):
+    with pytest.raises(CloroError, match="Query is required"):
+        run(CloroBingSearchTool, {"query": "  "})
+    assert http.calls == []
+
+
 # Plugin files
 
 
@@ -209,6 +261,7 @@ def test_plugin_registers_provider_and_tools():
     assert registration.get_tool_provider_cls("cloro").__name__ == "CloroProvider"
     expected = {
         "google_search": "CloroGoogleSearchTool",
+        "bing_search": "CloroBingSearchTool",
         "chatgpt": "CloroChatGPTTool",
         "aimode": "CloroAIModeTool",
         "gemini": "CloroGeminiTool",
@@ -228,7 +281,9 @@ def test_each_tool_file_has_one_tool_class():
 def test_manifest_and_tool_files_agree():
     manifest = yaml.safe_load(Path(ROOT, "manifest.yaml").read_text(encoding="utf-8"))
     provider = yaml.safe_load(Path(ROOT, "provider/cloro.yaml").read_text(encoding="utf-8"))
-    assert manifest["version"] == manifest["meta"]["version"]
+    # meta.version is the version of the manifest format, not of the plugin.
+    assert manifest["meta"]["version"] == "0.0.1"
+    assert cloro_api.USER_AGENT == f"cloro-dify-plugin/{manifest['version']}"
     assert manifest["author"] == provider["identity"]["author"] == "cloro-dev"
     assert manifest["network"]["domains"] == ["api.cloro.dev"]
     assert Path(ROOT, "_assets", manifest["icon"]).is_file()
@@ -239,7 +294,7 @@ def test_manifest_and_tool_files_agree():
 
 
 def test_no_promoted_engines_outside_scope():
-    # Only ChatGPT, Google AI Mode, Gemini, Bing AI Mode and Google Search are in this plugin.
+    # Only ChatGPT, Google AI Mode, Gemini, Bing AI Mode, Google Search and Bing Search are in this plugin.
     names = ("perplexity", "copilot", "grok")
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".venv" in path.parts or ".git" in path.parts or path.suffix == ".pyc":

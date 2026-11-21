@@ -1,0 +1,58 @@
+{
+ "success": true,
+ "result": {
+  "organicResults": [
+   {
+    "position": 1,
+    "title": "The 12 best rank tracker tools - Zapier",
+    "link": "https://zapier.com/blog/best-rank-tracker/",
+    "displayedLink": "https://zapier.com › blog › best-rank-tracker",
+    "snippet": "Semrush does just about everything you could ask an SEO tool to do, which is why it is the best overall rank tracker.",
+    "page": 1,
+    "date": "Nov 27, 2024"
+   },
+   {
+    "position": 2,
+    "title": "15 Best Rank Tracking Software We're Using for 2026",
+    "link": "https://onelittleweb.com/top-tools/best-rank-tracking-software/",
+    "displayedLink": "https://onelittleweb.com › top-tools",
+    "snippet": "The best tools like Semrush, Ahrefs, SE Ranking and AccuRanker now track how your brand shows up in AI answers.",
+    "page": 1
+   },
+   {
+    "position": 3,
+    "title": "Result with an empty link",
+    "link": "",
+    "displayedLink": "",
+    "snippet": "",
+    "page": 1
+   }
+  ],
+  "aioverview": {
+   "text": "Popular rank trackers include Semrush, Ahrefs and SE Ranking. Semrush suits large teams, and SE Ranking costs less.",
+   "sources": [
+    {
+     "label": "The 12 best rank tracker tools - Zapier",
+     "url": "https://zapier.com/blog/best-rank-tracker/",
+     "description": null,
+     "position": 1
+    },
+    {
+     "label": "15 Best Rank Tracking Software",
+     "url": "https://onelittleweb.com/top-tools/best-rank-tracking-software/",
+     "description": null,
+     "position": 2
+    }
+   ],
+   "citationPills": [
+    {
+     "label": "The 12 best rank tracker tools - Zapier",
+     "citationPillId": 1,
+     "url": "https://zapier.com/blog/best-rank-tracker/",
+     "domain": "zapier.com",
+     "position": 1
+    }
+   ]
+  }
+ }
+}

@@ -4,7 +4,7 @@ identity:
   label:
     en_US: cloro
   description:
-    en_US: Answers from ChatGPT, Google AI Mode, Gemini and Bing AI Mode with their sources, and Google Search results with the AI Overview.
+    en_US: Answers from ChatGPT, Google AI Mode, Gemini and Bing AI Mode with their sources, and Google Search and Bing Search results with the AI Overview.
   icon: icon.svg
   tags:
     - search
@@ -21,6 +21,7 @@ credentials_for_provider:
     url: https://dashboard.cloro.dev/api-keys?utm_source=dify-plugins&utm_medium=byok
 tools:
   - tools/google_search.yaml
+  - tools/bing_search.yaml
   - tools/chatgpt.yaml
   - tools/aimode.yaml
   - tools/gemini.yaml

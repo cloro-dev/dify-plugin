@@ -1,14 +1,15 @@
 # cloro for Dify
 
-This plugin adds five tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
+This plugin adds six tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
 
 - **ChatGPT Answer**: the answer that ChatGPT gives to a prompt, with the sources that it cites.
 - **Google AI Mode Answer**: the answer that Google AI Mode gives to a prompt, with its sources.
 - **Gemini Answer**: the answer that Gemini gives to a prompt, with its sources.
 - **Bing AI Mode Answer**: the answer that Bing AI Mode gives to a prompt, with its sources.
 - **Google Search**: the Google organic results for a query. As an option, the tool also gets the Google AI Overview text and its sources.
+- **Bing Search**: the Bing organic results for a query. As an option, the tool also gets the text of the Bing AI Overview (the AI summary at the top of the results page) and its sources.
 
-Each tool sends the request from the country that you select. Use the tools to see what AI assistants and Google tell people about a topic, a brand or a product, and which pages they cite.
+Each tool sends the request from the country that you select. Use the tools to see what AI assistants, Google and Bing tell people about a topic, a brand or a product, and which pages they cite.
 
 Source: https://github.com/cloro-dev/dify-plugin
 Contact: info@cloro.dev
@@ -29,10 +30,11 @@ Contact: info@cloro.dev
 | Gemini Answer | Prompt, Country | 6 |
 | Bing AI Mode Answer | Prompt, Country | 6 |
 | Google Search | Query, Country, Include AI Overview | 5, or 7 with the AI Overview |
+| Bing Search | Query, Country, Include AI Overview | 5, or 7 with the AI Overview |
 
-- **Prompt** of the Bing AI Mode tool can have a maximum of 3,500 characters after URL encoding, and fewer for non-Latin scripts. cloro rejects a longer prompt with error 400.
-- **Country** is a two-letter country code, for example `US`, `GB` or `DE`. The default is `US`.
-- **Include AI Overview** is a setting of the Google Search tool. Google does not show an AI Overview for all queries. When there is no AI Overview, the AI Overview text is empty.
+- **Prompt** of the Bing AI Mode tool and **Query** of the Bing Search tool can have a maximum of 3,500 characters after URL encoding, and fewer for non-Latin scripts. cloro rejects a longer text with error 400.
+- **Country** is a two-letter country code, for example `US`, `GB` or `DE`. The default is `US`. The Bing tools do not support `CN`, `KR` and `RU`.
+- **Include AI Overview** is a setting of the Google Search and Bing Search tools. Google and Bing do not show an AI Overview for all queries. When there is no AI Overview, the AI Overview text is empty.
 
 The credit counts are for the synchronous API, which these tools use. Source: [cloro pricing by provider](https://cloro.dev/docs/guides/providers?utm_source=dify-plugins&utm_medium=byok).
 
@@ -55,7 +57,7 @@ JSON of the answer tools:
 }
 ```
 
-JSON of Google Search:
+JSON of Google Search and Bing Search:
 
 ```json
 {
@@ -76,7 +78,7 @@ The tool stops with the error message from cloro. Examples: `cloro error 401 (IN
 
 The plugin connects only to `https://api.cloro.dev` on port 443. The Dify plugin daemon must be able to make outbound HTTPS requests to this host. The API key goes only in the `Authorization: Bearer` header.
 
-Timeouts: 30 seconds for the key check, 120 seconds for Google Search and 290 seconds for the answer tools.
+Timeouts: 30 seconds for the key check, 120 seconds for Google Search and Bing Search, and 290 seconds for the answer tools.
 
 ## Privacy
 
