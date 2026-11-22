@@ -9,7 +9,7 @@ from typing import Any
 import requests
 
 API_BASE = "https://api.cloro.dev"
-USER_AGENT = "cloro-dify-plugin/0.0.2"
+USER_AGENT = "cloro-dify-plugin/0.1.0"
 
 # Seconds to wait for cloro. A sync AI answer can take some minutes, so the
 # answer timeout is near the plugin limit (MAX_REQUEST_TIMEOUT in main.py).
@@ -146,6 +146,27 @@ def answer_output(result: dict) -> dict:
     }
 
 
+def search_ads(result: dict) -> list[dict]:
+    """The ads on the results page. Each ad has only the fields that cloro returns."""
+    ads = []
+    for item in result.get("ads") or []:
+        if not isinstance(item, dict):
+            continue
+        price = item.get("price")
+        ad = {
+            "position": item.get("position"),
+            "block_position": item.get("blockPosition"),
+            "type": item.get("type"),
+            "title": item.get("title"),
+            "link": item.get("url") if _usable_url(item.get("url")) else None,
+            "description": item.get("description"),
+            "price": price.get("raw") if isinstance(price, dict) else None,
+            "store": item.get("store"),
+        }
+        ads.append({key: value for key, value in ad.items() if value})
+    return ads
+
+
 def search_output(result: dict) -> dict:
     """Output of the Google Search and Bing Search tools."""
     organic = []
@@ -160,7 +181,7 @@ def search_output(result: dict) -> dict:
                 "snippet": item.get("snippet") or "",
             }
         )
-    output: dict[str, Any] = {"organic_results": organic}
+    output: dict[str, Any] = {"organic_results": organic, "ads": search_ads(result)}
     overview = result.get("aioverview")
     if isinstance(overview, dict):
         output["ai_overview"] = {
@@ -206,7 +227,7 @@ def answer_text(output: dict) -> str:
 
 
 def search_text(output: dict, label: str) -> str:
-    """Plain text for an agent: the AI Overview (if any), then the results."""
+    """Plain text for an agent: the AI Overview (if any), then the results, then the ads (if any)."""
     lines: list[str] = []
     overview = output.get("ai_overview")
     if overview is not None:
@@ -221,4 +242,12 @@ def search_text(output: dict, label: str) -> str:
         lines.append(f"{item['position']}. {item['title']}: {item['link']}")
         if item["snippet"]:
             lines.append(f"   {item['snippet']}")
+    if output["ads"]:
+        lines += ["", "Ads:"]
+    for ad in output["ads"]:
+        place = " ".join(str(ad[key]) for key in ("type", "block_position", "position") if key in ad)
+        lines.append(f"- [{place}] {ad.get('title', '')}" + (f": {ad['link']}" if "link" in ad else ""))
+        details = [ad[key] for key in ("description", "price", "store") if key in ad]
+        if details:
+            lines.append(f"   {' | '.join(details)}")
     return "\n".join(lines)
