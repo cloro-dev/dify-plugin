@@ -5,8 +5,8 @@ identity:
     en_US: Bing Search
 description:
   human:
-    en_US: Search Bing from a country and get the organic results. As an option, also get the AI Overview text and its sources. Costs 5 credits, or 7 credits with the AI Overview.
-  llm: Searches Bing from a country and returns the organic results (title, link, snippet). If the AI Overview option is on, it also returns the text of Bing's AI summary at the top of the results page and the sources that it cites. Use it for current Bing web results or to see what Bing's AI summary says about a topic.
+    en_US: Search Bing from a country and get the organic results and the ads. As an option, also get the AI Overview text and its sources. Costs 5 credits, or 7 credits with the AI Overview.
+  llm: Searches Bing from a country and returns the organic results (title, link, snippet) and the ads on the page (type, block position, title, link, description, price, store). If the AI Overview option is on, it also returns the text of Bing's AI summary at the top of the results page and the sources that it cites. Use it for current Bing web results or to see what Bing's AI summary says about a topic.
 parameters:
   - name: query
     type: string

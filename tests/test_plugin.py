@@ -250,6 +250,68 @@ def test_bing_search_needs_a_query(http):
     assert http.calls == []
 
 
+# Ads
+
+
+@pytest.mark.parametrize("tool_cls", [CloroGoogleSearchTool, CloroBingSearchTool])
+def test_search_returns_the_ads(http, tool_cls):
+    fixture = load_fixture("bing-noaio.json")
+    fixture["result"]["ads"] = [
+        {
+            "position": 1,
+            "blockPosition": "top",
+            "type": "RESULT",
+            "title": "Rank tracker sale",
+            "url": "https://shop.example/rank",
+            "page": 1,
+            "domain": "shop.example",
+            "description": "Track ranks.",
+        },
+        {
+            "position": 1,
+            "blockPosition": "rhs",
+            "type": "SHOPPING_CARD",
+            "title": "SEO book",
+            "url": "https://www.google.com/goto?url=x",
+            "price": {"value": 29, "currency": "$", "raw": "$29.00"},
+            "store": "Shop",
+        },
+        {},
+    ]
+    http.reply(200, fixture)
+    text, data = run(tool_cls, {"query": "best rank tracker"})
+    assert http.calls[0]["json"] == {"query": "best rank tracker", "country": "US"}
+    assert data["ads"] == [
+        {
+            "position": 1,
+            "block_position": "top",
+            "type": "RESULT",
+            "title": "Rank tracker sale",
+            "link": "https://shop.example/rank",
+            "description": "Track ranks.",
+        },
+        {
+            "position": 1,
+            "block_position": "rhs",
+            "type": "SHOPPING_CARD",
+            "title": "SEO book",
+            "price": "$29.00",
+            "store": "Shop",
+        },
+        {},
+    ]
+    assert len(data["organic_results"]) == 2
+    assert "Ads:\n- [RESULT top 1] Rank tracker sale: https://shop.example/rank\n   Track ranks." in text
+    assert "- [SHOPPING_CARD rhs 1] SEO book\n   $29.00 | Shop" in text
+
+
+def test_search_without_ads(http):
+    http.reply(200, load_fixture("bing-noaio.json"))
+    text, data = run(CloroBingSearchTool, {"query": "q"})
+    assert data["ads"] == []
+    assert "Ads:" not in text
+
+
 # Plugin files
 
 

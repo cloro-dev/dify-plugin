@@ -6,8 +6,8 @@ This plugin adds six tools from [cloro](https://cloro.dev?utm_source=dify-plugin
 - **Google AI Mode Answer**: the answer that Google AI Mode gives to a prompt, with its sources.
 - **Gemini Answer**: the answer that Gemini gives to a prompt, with its sources.
 - **Bing AI Mode Answer**: the answer that Bing AI Mode gives to a prompt, with its sources.
-- **Google Search**: the Google organic results for a query. As an option, the tool also gets the Google AI Overview text and its sources.
-- **Bing Search**: the Bing organic results for a query. As an option, the tool also gets the text of the Bing AI Overview (the AI summary at the top of the results page) and its sources.
+- **Google Search**: the Google organic results and ads for a query. As an option, the tool also gets the Google AI Overview text and its sources.
+- **Bing Search**: the Bing organic results and ads for a query. As an option, the tool also gets the text of the Bing AI Overview (the AI summary at the top of the results page) and its sources.
 
 Each tool sends the request from the country that you select. Use the tools to see what AI assistants, Google and Bing tell people about a topic, a brand or a product, and which pages they cite.
 
@@ -64,11 +64,12 @@ JSON of Google Search and Bing Search:
   "query": "best project management tools",
   "country": "US",
   "organic_results": [{"position": 1, "title": "Page title", "link": "https://example.com/page", "snippet": "Text from the page"}],
+  "ads": [{"position": 1, "block_position": "rhs", "type": "SHOPPING_CARD", "title": "Product title", "link": "https://example.com/product", "price": "$12.57", "store": "Example"}],
   "ai_overview": {"text": "Text of the AI Overview", "sources": [{"position": 1, "title": "Page title", "url": "https://example.com/page"}]}
 }
 ```
 
-`ai_overview` is in the output only when **Include AI Overview** is on. Google Search and Bing Search do not return the ads. The tools do not return results whose link is empty or is a Google redirect (`google.com/goto`) link.
+`ai_overview` is in the output only when **Include AI Overview** is on. `ads` has the text ads (`RESULT`) and the shopping cards (`SHOPPING_CARD`) on the page. An ad has only the fields that the page shows, and `description` is one of them. `ads` is empty when the page has no ads. The ads cost no extra credits. The tools do not return results whose link is empty or is a Google redirect (`google.com/goto`) link.
 
 ### Errors
 
