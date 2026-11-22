@@ -68,7 +68,7 @@ JSON of Google Search and Bing Search:
 }
 ```
 
-`ai_overview` is in the output only when **Include AI Overview** is on. The tools do not return results whose link is empty or is a Google redirect (`google.com/goto`) link.
+`ai_overview` is in the output only when **Include AI Overview** is on. Google Search and Bing Search do not return the ads. The tools do not return results whose link is empty or is a Google redirect (`google.com/goto`) link.
 
 ### Errors
 
