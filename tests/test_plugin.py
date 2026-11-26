@@ -357,12 +357,13 @@ def test_manifest_and_tool_files_agree():
 
 def test_no_promoted_engines_outside_scope():
     # Only ChatGPT, Google AI Mode, Gemini, Bing AI Mode, Google Search and Bing Search are in this plugin.
+    # "Copilot Search in Bing" is the other name of Bing AI Mode, so it is allowed.
     names = ("perplexity", "copilot", "grok")
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".venv" in path.parts or ".git" in path.parts or path.suffix == ".pyc":
             continue
         if path.suffix in {".py", ".yaml", ".md", ".txt"} and path.name != "test_plugin.py":
-            text = path.read_text(encoding="utf-8").lower()
+            text = path.read_text(encoding="utf-8").lower().replace("copilot search in bing", "")
             assert not any(n in text for n in names), path
 
 

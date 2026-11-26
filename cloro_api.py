@@ -9,7 +9,7 @@ from typing import Any
 import requests
 
 API_BASE = "https://api.cloro.dev"
-USER_AGENT = "cloro-dify-plugin/0.1.0"
+USER_AGENT = "cloro-dify-plugin/0.1.2"
 
 # Seconds to wait for cloro. A sync AI answer can take some minutes, so the
 # answer timeout is near the plugin limit (MAX_REQUEST_TIMEOUT in main.py).
