@@ -1,11 +1,11 @@
-version: 0.1.0
+version: 0.1.1
 type: plugin
 author: cloro-dev
 name: cloro
 label:
   en_US: cloro
 description:
-  en_US: Get the answers that ChatGPT, Google AI Mode, Gemini and Bing AI Mode give to a prompt, with their sources, and Google Search and Bing Search results with the AI Overview.
+  en_US: cloro is the API for AI answers. Get the answers of ChatGPT, Google AI Mode, Gemini and Bing AI Mode (Copilot Search in Bing) with their sources, and Google Search and Bing Search results with the AI Overview.
 icon: icon.svg
 created_at: "2026-11-06T00:00:00Z"
 privacy: PRIVACY.md

@@ -5,7 +5,7 @@ identity:
     en_US: Bing AI Mode Answer
 description:
   human:
-    en_US: Send a prompt to Bing AI Mode from a country and get the answer with its sources. Costs 6 credits.
+    en_US: Send a prompt to Bing AI Mode (Copilot Search in Bing) from a country and get the answer with its sources. Costs 6 credits.
   llm: Sends a prompt to Bing AI Mode from a country and returns the answer that Bing AI Mode gives, with the sources it cites. Use it to see what Bing AI Mode tells people about a topic, a brand or a product.
 parameters:
   - name: prompt

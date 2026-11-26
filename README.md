@@ -1,6 +1,6 @@
 # cloro for Dify
 
-This plugin adds six tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
+cloro is the API for AI answers. This plugin adds six tools from [cloro](https://cloro.dev?utm_source=dify-plugins&utm_medium=byok) to Dify agents, chatflows and workflows:
 
 - **ChatGPT Answer**: the answer that ChatGPT gives to a prompt, with the sources that it cites.
 - **Google AI Mode Answer**: the answer that Google AI Mode gives to a prompt, with its sources.
