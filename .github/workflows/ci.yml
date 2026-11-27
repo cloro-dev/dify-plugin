@@ -1,0 +1,27 @@
+# Runs the tests on each pull request and on each push to main.
+# Branch protection on main requires the "test" checks of this workflow.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # dify_plugin needs Python 3.12 or later. The Dify runner uses 3.12.
+        python-version: ["3.12", "3.15"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run the tests
+        run: uv run --with-requirements requirements.txt --with pytest pytest tests
